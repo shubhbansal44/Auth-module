@@ -4,10 +4,7 @@
  * @type {string[]}
  */
 
-export const publicRoutes: string[] = [
-  "/",
-  "/auth/verify",
-];
+export const publicRoutes: string[] = ["/", "/auth/verify"];
 
 /**
  * An array of routes that are used to authenticate,
@@ -20,6 +17,7 @@ export const authRoutes: string[] = [
   "/auth/signup",
   "/auth/error",
   "/auth/reset",
+  "/auth/reset-password",
 ];
 
 /**
@@ -28,7 +26,7 @@ export const authRoutes: string[] = [
  * @type {string}
  */
 
-export const apiAuthPrefix: string = "/api/auth"
+export const apiAuthPrefix: string = "/api/auth";
 
 /**
  * api users route for server side load,
@@ -36,11 +34,11 @@ export const apiAuthPrefix: string = "/api/auth"
  * @type {string}
  */
 
-export const apiUsersPrefix: string = "/api/users"
+export const apiUsersPrefix: string = "/api/users";
 
 /**
  * default log in redirect route
  * @type {string}
  */
 
-export const DEFAULT_LOGIN_REDIRECT: string = "/private"
+export const DEFAULT_LOGIN_REDIRECT: string = "/private";
