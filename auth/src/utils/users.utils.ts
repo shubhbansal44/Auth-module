@@ -1,4 +1,4 @@
-import { db } from "@/lib/db";
+import { db } from "@/lib/db.lib";
 
 export const getUserByEmail = async (Email: string) => {
   try {

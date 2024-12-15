@@ -1,8 +1,10 @@
-import { db } from "@/lib/db";
+import { db } from "@/lib/db.lib";
 import { NextRequest, NextResponse } from "next/server";
 import { genSalt, hash } from "bcryptjs";
 import { getSafeUser, getUserByEmail } from "@/utils/users.utils";
 import { RegisterSchema } from "@/schemas/authSchema";
+import { generateVerificationToken } from "@/lib/tokens.lib";
+import { sendVerificationEmail } from "@/utils/mailer.utils";
 
 interface RequestBody {
   name: string;
@@ -17,7 +19,7 @@ export async function POST(request: NextRequest) {
 
     if(!validate.success) {
       return NextResponse.json({
-        error: "Invalid credentials.",
+        message: "Invalid credentials.",
         status: 400,
         success: false,
       }, {status: 400});
@@ -29,7 +31,7 @@ export async function POST(request: NextRequest) {
 
     if (existingUser) {
       return NextResponse.json({
-        error: "Email already in use!",
+        message: "Email already in use!",
         status: 400,
         success: false,
       }, {status: 400});
@@ -48,7 +50,7 @@ export async function POST(request: NextRequest) {
 
     if(!registeredUser) {
       return NextResponse.json({
-        error: "unable to register new user!",
+        message: "unable to register new user!",
         status: 500,
         success: false,
       }, {status: 500})
@@ -57,22 +59,67 @@ export async function POST(request: NextRequest) {
     const returnUser = await getSafeUser(registeredUser.id)
 
     if(!returnUser) {
+
+      await db.user.delete({
+        where: {
+          id: registeredUser.id
+        }
+      })
+
       return NextResponse.json({
-        error: "Internal server error!",
+        message: "Internal server error!",
+        status: 500,
+        success: false,
+      }, {status: 500});
+    }
+
+    const verificationToken = await generateVerificationToken({ email, name })
+
+    if(!verificationToken) {
+
+      await db.user.delete({
+        where: {
+          id: returnUser.id
+        }
+      })
+
+      return NextResponse.json({
+        message: "Token generation failed.",
+        status: 500,
+        success: false,
+      }, {status: 500});
+    }
+
+    const mailInfo = await sendVerificationEmail({
+      name: verificationToken.name,
+      email: verificationToken.email,
+      token: verificationToken.token
+    })
+
+    if(!mailInfo) {
+
+      await db.user.delete({
+        where: {
+          id: returnUser.id
+        }
+      })
+
+      return NextResponse.json({
+        message: "Unable to send verification mail.",
         status: 500,
         success: false,
       }, {status: 500});
     }
 
     return NextResponse.json({
-      message: "User registered successfully!",
+      message: "Verification mail sent!",
       success: true,
       status: 200,
       user: returnUser
     }, {status: 200});
   } catch (error: any) {
     return NextResponse.json({
-      error: error.message,
+      message: error.message,
       status: 500,
       success: false,
     }, {status: 500});

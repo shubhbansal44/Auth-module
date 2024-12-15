@@ -6,6 +6,7 @@
 
 export const publicRoutes: string[] = [
   "/",
+  "/auth/verify",
 ];
 
 /**
@@ -17,7 +18,8 @@ export const publicRoutes: string[] = [
 export const authRoutes: string[] = [
   "/auth/login",
   "/auth/signup",
-  "/auth/error"
+  "/auth/error",
+  "/auth/reset",
 ];
 
 /**

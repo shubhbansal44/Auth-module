@@ -5,6 +5,7 @@ import { LoginSchema } from "@/schemas/authSchema";
 import { signIn } from "@/auth";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { AuthError } from "next-auth";
+import { getGlobalError, setGlobalError } from "@/lib/error.lib";
 
 export const Login = async (values: z.infer<typeof LoginSchema>) => {
   const validate = LoginSchema.safeParse(values);
@@ -24,13 +25,15 @@ export const Login = async (values: z.infer<typeof LoginSchema>) => {
 
     return { success: "Login successful", error: "" };
   } catch (err) {
+    const error = getGlobalError()
+    setGlobalError(null)
     if (err instanceof AuthError) {
       switch (err.type) {
         case "CredentialsSignin":
-          return { error: "Invalid credentials" };
+          return { error: error?.message || "Invalid credentials" };
         default:
           return {
-            error: "An unexpected error occurred. Please try again later.",
+            error: error?.message || "An unexpected error occurred. Please try again later.",
             success: "",
           };
       }

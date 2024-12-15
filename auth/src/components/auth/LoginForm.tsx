@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/auth/FormError";
 import { FormSuccess } from "@/components/auth/FormSuccess";
 import { Login } from "@/actions/login";
+import Link from "next/link";
 
 export const LoginForm = () => {
   const searchParams = useSearchParams();
@@ -58,7 +59,7 @@ export const LoginForm = () => {
   return (
     <CardWrapper headerLabel='Welcome Back!' backButtonLabel="Don't have an account?" backButtonHref='/auth/signup' showSocial>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(Submit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(Submit)} className="space-y-3">
           <div className="space-y-4">
             <FormField control={form.control} name="email" render={({ field }) => (
               <FormItem>
@@ -75,15 +76,22 @@ export const LoginForm = () => {
                 <FormControl>
                   <Input {...field} placeholder="******" type="password" disabled={isPending} />
                 </FormControl>
+                <Button size={"sm"} variant={"link"} className="p-0 font-normal" asChild>
+                  <Link href={"/auth/reset"}>
+                    Forgot password?
+                  </Link>
+                </Button>
                 <FormMessage/>
               </FormItem>
             )}/>
           </div>
-          <FormError message={error || urlError}/>
-          <FormSuccess message={success}/>
-          <Button type="submit" className="w-full" disabled={isPending} >
-            Login
-          </Button>
+          <div className="space-y-6">
+            <FormError message={error || urlError}/>
+            <FormSuccess message={success}/>
+            <Button type="submit" className="w-full" disabled={isPending} >
+              Login
+            </Button>
+          </div>
         </form>
       </Form>
     </CardWrapper>
