@@ -1,35 +1,30 @@
 "use client";
-import React from 'react';
-import { useRouter } from 'next/navigation';
+import React from "react";
+import { useRouter } from "next/navigation";
 
 interface loginButtonProps {
   children: React.ReactNode;
-  mode?: "modal" | "redirect",
+  mode?: "modal" | "redirect";
   asChild?: boolean;
 }
-
 
 export function LoginButton({
   children,
   mode = "redirect",
-  asChild
+  asChild,
 }: loginButtonProps) {
-  const router = useRouter()
+  const router = useRouter();
 
   const onClick = () => {
-    router.push("/auth/login")
-  }
+    router.push("/auth/login");
+  };
 
-  if(mode == "modal") {
-    return (
-      <span>
-        CURRENTLY UNAVAILABLE!
-      </span>
-    )
+  if (mode == "modal") {
+    return <span>CURRENTLY UNAVAILABLE!</span>;
   }
 
   return (
-    <span onClick={onClick} className='cursor-pointer'>
+    <span onClick={onClick} className="cursor-pointer">
       {children}
     </span>
   );

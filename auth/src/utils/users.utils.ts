@@ -7,7 +7,7 @@ export const getUserByEmail = async (Email: string) => {
   } catch {
     return null;
   }
-}
+};
 
 export const getUserById = async (Id: string) => {
   try {
@@ -16,7 +16,7 @@ export const getUserById = async (Id: string) => {
   } catch {
     return null;
   }
-}
+};
 
 export const getSafeUser = async (Id: string) => {
   try {
@@ -30,11 +30,10 @@ export const getSafeUser = async (Id: string) => {
         image: true,
         createdAt: true,
         updatedAt: true,
-        
-      }
+      },
     });
     return user;
   } catch {
     return null;
   }
-}
+};

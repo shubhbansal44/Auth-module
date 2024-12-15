@@ -17,24 +17,30 @@ export async function POST(request: NextRequest) {
     const reqBody: RequestBody = await request.json();
     const validate = RegisterSchema.safeParse(reqBody);
 
-    if(!validate.success) {
-      return NextResponse.json({
-        message: "Invalid credentials.",
-        status: 400,
-        success: false,
-      }, {status: 400});
+    if (!validate.success) {
+      return NextResponse.json(
+        {
+          message: "Invalid credentials.",
+          status: 400,
+          success: false,
+        },
+        { status: 400 }
+      );
     }
 
     const { name, password, email } = validate.data;
 
-    const existingUser = await getUserByEmail(email)
+    const existingUser = await getUserByEmail(email);
 
     if (existingUser) {
-      return NextResponse.json({
-        message: "Email already in use!",
-        status: 400,
-        success: false,
-      }, {status: 400});
+      return NextResponse.json(
+        {
+          message: "Email already in use!",
+          status: 400,
+          success: false,
+        },
+        { status: 400 }
+      );
     }
 
     const salt = await genSalt(10);
@@ -48,80 +54,95 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    if(!registeredUser) {
-      return NextResponse.json({
-        message: "unable to register new user!",
-        status: 500,
-        success: false,
-      }, {status: 500})
+    if (!registeredUser) {
+      return NextResponse.json(
+        {
+          message: "unable to register new user!",
+          status: 500,
+          success: false,
+        },
+        { status: 500 }
+      );
     }
 
-    const returnUser = await getSafeUser(registeredUser.id)
+    const returnUser = await getSafeUser(registeredUser.id);
 
-    if(!returnUser) {
-
+    if (!returnUser) {
       await db.user.delete({
         where: {
-          id: registeredUser.id
-        }
-      })
+          id: registeredUser.id,
+        },
+      });
 
-      return NextResponse.json({
-        message: "Internal server error!",
-        status: 500,
-        success: false,
-      }, {status: 500});
+      return NextResponse.json(
+        {
+          message: "Internal server error!",
+          status: 500,
+          success: false,
+        },
+        { status: 500 }
+      );
     }
 
-    const verificationToken = await generateVerificationToken({ email, name })
+    const verificationToken = await generateVerificationToken({ email, name });
 
-    if(!verificationToken) {
-
+    if (!verificationToken) {
       await db.user.delete({
         where: {
-          id: returnUser.id
-        }
-      })
+          id: returnUser.id,
+        },
+      });
 
-      return NextResponse.json({
-        message: "Token generation failed.",
-        status: 500,
-        success: false,
-      }, {status: 500});
+      return NextResponse.json(
+        {
+          message: "Token generation failed.",
+          status: 500,
+          success: false,
+        },
+        { status: 500 }
+      );
     }
 
     const mailInfo = await sendVerificationEmail({
       name: verificationToken.name,
       email: verificationToken.email,
-      token: verificationToken.token
-    })
+      token: verificationToken.token,
+    });
 
-    if(!mailInfo) {
-
+    if (!mailInfo) {
       await db.user.delete({
         where: {
-          id: returnUser.id
-        }
-      })
+          id: returnUser.id,
+        },
+      });
 
-      return NextResponse.json({
-        message: "Unable to send verification mail.",
-        status: 500,
-        success: false,
-      }, {status: 500});
+      return NextResponse.json(
+        {
+          message: "Unable to send verification mail.",
+          status: 500,
+          success: false,
+        },
+        { status: 500 }
+      );
     }
 
-    return NextResponse.json({
-      message: "Verification mail sent!",
-      success: true,
-      status: 200,
-      user: returnUser
-    }, {status: 200});
+    return NextResponse.json(
+      {
+        message: "Verification mail sent!",
+        success: true,
+        status: 200,
+        user: returnUser,
+      },
+      { status: 200 }
+    );
   } catch (error: any) {
-    return NextResponse.json({
-      message: error.message,
-      status: 500,
-      success: false,
-    }, {status: 500});
+    return NextResponse.json(
+      {
+        message: error.message,
+        status: 500,
+        success: false,
+      },
+      { status: 500 }
+    );
   }
 }

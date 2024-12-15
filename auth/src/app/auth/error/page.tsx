@@ -1,10 +1,6 @@
-import { ErrorCard } from '@/components/auth/ErrorCard';
-import React from 'react';
+import { ErrorCard } from "@/components/auth/ErrorCard";
+import React from "react";
 
 export default function error() {
-  return (
-    <>
-      <ErrorCard />
-    </>
-  );
+  return <ErrorCard />;
 }

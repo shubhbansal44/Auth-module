@@ -25,15 +25,20 @@ export const Login = async (values: z.infer<typeof LoginSchema>) => {
 
     return { success: "Login successful", error: "" };
   } catch (err) {
-    const error = getGlobalError()
-    setGlobalError(null)
+    const error = getGlobalError();
+    setGlobalError(null);
     if (err instanceof AuthError) {
       switch (err.type) {
         case "CredentialsSignin":
-          return { error: error?.message || "Invalid credentials" };
+          return {
+            error: error?.message || "Invalid credentials",
+            success: "",
+          };
         default:
           return {
-            error: error?.message || "An unexpected error occurred. Please try again later.",
+            error:
+              error?.message ||
+              "An unexpected error occurred. Please try again later.",
             success: "",
           };
       }

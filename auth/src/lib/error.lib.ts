@@ -1,7 +1,7 @@
 interface error {
-  message: string,
-  status: number,
-  success: boolean,
+  message: string;
+  status: number;
+  success: boolean;
 }
 
 export let globalError: error | null = null;

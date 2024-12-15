@@ -1,22 +1,17 @@
 import type { Metadata } from "next";
-import { Poppins, Montserrat } from "next/font/google"
+import { Poppins, Montserrat } from "next/font/google";
 import "./globals.css";
 // import { Toaster } from "react-hot-toast";
 
-
 const montserratFont = Montserrat({
-  subsets: ['latin'],
-  weight: [
-    '100', '200', '300', '400', '500', '600', '700', '800', '900'
-  ],
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
   variable: "--font-montserrat",
 });
 
 const poppinsFont = Poppins({
-  subsets: ['latin'],
-  weight: [
-    '100', '200', '300', '400', '500', '600', '700', '800', '900'
-  ],
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
   variable: "--font-poppins",
 });
 
@@ -33,8 +28,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css"/>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"/>
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css"
+        />
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+        />
       </head>
       <body
         className={`${montserratFont.variable} ${poppinsFont.variable} h-full w-screen antialiased select-none overflow-hidden`}

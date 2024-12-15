@@ -10,6 +10,7 @@ export const Register = async (values: z.infer<typeof RegisterSchema>) => {
   if (!validate.success) {
     return {
       error: "Invalid credentials!",
+      success: "",
     };
   }
   try {
@@ -19,8 +20,10 @@ export const Register = async (values: z.infer<typeof RegisterSchema>) => {
     return { success: res.message, error: "" };
   } catch (err: any) {
     return {
-      error: err.response?.data?.message || "An unexpected error occurred. Please try again later.",
+      error:
+        err.response?.data?.message ||
+        "An unexpected error occurred. Please try again later.",
       success: "",
     };
-  };
+  }
 };
