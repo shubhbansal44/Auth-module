@@ -19,6 +19,7 @@ export const RegisterSchema = z.object({
   name: z.string().min(1, {
     message: "Name is required!",
   }),
+  twoStepVerificationCheck: z.optional(z.boolean())
 });
 
 export const ResetSchema = z.object({
@@ -40,3 +41,12 @@ export const ResetPasswordSchema = z
     message: "Passwords don't match!",
     path: ["confirmPassword"],
   });
+
+
+export const TwoStepVerificationSchema = z.object({
+  token: z.string().min(6, {
+    message: "OTP must be of 6 characters!",
+  }).max(6, {
+    message: "OTP must be of 6 characters!",
+  }),
+});

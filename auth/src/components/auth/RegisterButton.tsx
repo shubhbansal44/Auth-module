@@ -16,7 +16,7 @@ export function RegisterButton({
   const router = useRouter();
 
   const onClick = () => {
-    router.push("/auth/signup");
+    router.push("/auth/register");
   };
 
   if (mode == "modal") {

@@ -4,6 +4,7 @@ import axios from "axios";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import { setGlobalError } from "@/lib/error.lib";
+import { setGlobalSuccess } from "@/lib/success.lib";
 
 export default {
   providers: [
@@ -18,10 +19,10 @@ export default {
     Credentials({
       name: "Credentials",
       credentials: {
-        username: {
-          label: "Username",
+        email: {
+          label: "email",
           type: "text",
-          placeholder: "Enter your username",
+          placeholder: "Enter your email",
         },
         password: {
           label: "Password",
@@ -37,6 +38,7 @@ export default {
           );
 
           if (res.data && res.data.user) {
+            setGlobalSuccess(res.data);
             return res.data.user;
           }
 

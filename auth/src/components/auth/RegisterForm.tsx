@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/auth/FormError";
 import { FormSuccess } from "@/components/auth/FormSuccess";
 import { Register } from "@/actions/register";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export const RegisterForm = () => {
   const [isPending, startTransition] = useTransition();
@@ -32,6 +33,7 @@ export const RegisterForm = () => {
       email: "",
       password: "",
       name: "",
+      twoStepVerificationCheck: false,
     },
   });
 
@@ -119,6 +121,26 @@ export const RegisterForm = () => {
           <Button type="submit" className="w-full" disabled={isPending}>
             Create an account
           </Button>
+          <FormField
+            control={form.control}
+            name="twoStepVerificationCheck"
+            render={({ field }) => (
+              <FormItem>
+                <div className="flex flex-row items-center justify-center w-full space-x-3">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value || false}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormLabel className="text-sm font-medium text-gray-700">
+                    Enable Two-Step Verification
+                  </FormLabel>
+                </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </form>
       </Form>
     </CardWrapper>

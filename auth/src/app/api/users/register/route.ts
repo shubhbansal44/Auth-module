@@ -1,7 +1,7 @@
 import { db } from "@/lib/db.lib";
 import { NextRequest, NextResponse } from "next/server";
 import { genSalt, hash } from "bcryptjs";
-import { getSafeUser, getUserByEmail } from "@/utils/users.utils";
+import { getSafeUserById, getUserByEmail } from "@/utils/users.utils";
 import { RegisterSchema } from "@/schemas/authSchema";
 import { generateVerificationToken } from "@/lib/tokens.lib";
 import { sendVerificationEmail } from "@/utils/mailer.utils";
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { name, password, email } = validate.data;
+    const { name, password, email, twoStepVerificationCheck } = validate.data;
 
     const existingUser = await getUserByEmail(email);
 
@@ -51,6 +51,7 @@ export async function POST(request: NextRequest) {
         name,
         email,
         password: _password,
+        isTwoFactorAuthEnabled: twoStepVerificationCheck
       },
     });
 
@@ -65,7 +66,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const returnUser = await getSafeUser(registeredUser.id);
+    const returnUser = await getSafeUserById(registeredUser.id);
 
     if (!returnUser) {
       await db.user.delete({

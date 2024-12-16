@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Reset Your Password</title>
+    <title>Two-Step Verification</title>
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -20,18 +20,23 @@
         border: 1px solid #ccc;
         text-align: center;
       }
+      .otp {
+        font-size: 24px;
+        font-weight: bold;
+        color: #007bff;
+        margin: 20px 0;
+      }
       .btn {
         display: inline-block;
         padding: 10px 20px;
-        background-color: #dc3545;
+        background-color: #007bff;
         color: white;
         text-decoration: none;
         border-radius: 5px;
         font-size: 16px;
-        margin: 20px 0;
       }
       .btn:hover {
-        background-color: #c82333;
+        background-color: #0056b3;
       }
       .footer {
         margin-top: 20px;
@@ -44,15 +49,17 @@
     <div class="container">
       <h2>Hello, {{name}}!</h2>
       <p>
-        We received a request to reset your password. Click the button below to proceed:
+        A two-step verification request was made to your account. Enter the OTP below on the verification page to complete the login process:
       </p>
-      <a href="{{resetLink}}" class="btn">Reset Password</a>
+      <div class="otp">{{otp}}</div>
+      <p>Click the link below to access the verification page:</p>
+      <a href="{{verificationLink}}" class="btn">Go to Verification Page</a>
       <p>
-        If you didn’t make this request, you can ignore this email or
+        If you didn’t make this request, please 
         <a href="{{supportLink}}" style="color: #007bff">contact support</a>
-        for assistance.
+        immediately.
       </p>
-      <div class="footer">This link is valid for 15 minutes.</div>
+      <div class="footer">This OTP is valid for 10 minutes.</div>
     </div>
   </body>
 </html>

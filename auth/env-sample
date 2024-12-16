@@ -1,0 +1,21 @@
+# Database Connection
+DATABASE_URL=postgresql://username:password@localhost:5432/mydatabase
+
+# Authentication Secret (JWT or Session Key)
+AUTH_SECRET=supersecretkey123456789
+
+# Server and Domain Configuration
+SERVER=http://example.com/api/...
+DOMAIN=http://example.com
+
+# GitHub OAuth Configuration
+GITHUB_CLIENT_ID=abc123456789githubclientid
+GITHUB_CLIENT_SECRET=1234567890abcdefgithubsecret
+
+# Google OAuth Configuration
+GOOGLE_CLIENT_ID=1234567890-abcdefg.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=GOCSPX-abcdefghijklmno123456
+
+# Mailtrap (Email Testing Configuration)
+MAILTRAP_USER=your_mailtrap_user
+MAILTRAP_PASSWORD=your_mailtrap_password

@@ -18,7 +18,7 @@ export const getUserById = async (Id: string) => {
   }
 };
 
-export const getSafeUser = async (Id: string) => {
+export const getSafeUserById = async (Id: string) => {
   try {
     const user = await db.user.findUnique({
       where: { id: Id },

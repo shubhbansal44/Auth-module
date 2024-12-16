@@ -27,10 +27,12 @@ export const sendVerificationEmail = async ({
 
     let htmlTemplate = fs.readFileSync(filePath, "utf8");
     const verificationLink = `${process.env.DOMAIN}/auth/verify?token=${token}`;
+    const supportLink = `${process.env.DOMAIN}/support`;
 
     htmlTemplate = htmlTemplate
       .replace("{{name}}", name)
-      .replace("{{verificationLink}}", verificationLink);
+      .replace("{{verificationLink}}", verificationLink)
+      .replace("{{supportLink}}", supportLink);
 
     const mailOptions = {
       from: "no-reply@example.com",
@@ -71,15 +73,66 @@ export const sendResetPasswordMail = async ({
 
     let htmlTemplate = fs.readFileSync(filePath, "utf8");
     const resetLink = `${process.env.DOMAIN}/auth/reset-password?token=${token}`;
+    const supportLink = `${process.env.DOMAIN}/support`;
+
 
     htmlTemplate = htmlTemplate
       .replace("{{name}}", name)
-      .replace("{{resetLink}}", resetLink);
+      .replace("{{resetLink}}", resetLink)
+      .replace("{{supportLink}}", supportLink);
+      
 
     const mailOptions = {
       from: "no-reply@example.com",
       to: email,
       subject: "Reset your password",
+      html: htmlTemplate,
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    return info;
+  } catch (error: any) {
+    return null;
+  }
+};
+
+interface SendTwoStepVerificationMailOptions {
+  name: string;
+  email: string;
+  token: string;
+}
+
+export const sendTwoStepVerificationMail = async ({
+  name,
+  email,
+  token,
+}: SendTwoStepVerificationMailOptions) => {
+  try {
+    const transporter = nodemailer.createTransport({
+      host: "sandbox.smtp.mailtrap.io",
+      port: 2525,
+      auth: {
+        user: process.env.MAILTRAP_USER,
+        pass: process.env.MAILTRAP_PASSWORD,
+      },
+    });
+
+    const filePath = path.join(process.cwd(), "public", "twoStepVerification.html");
+
+    let htmlTemplate = fs.readFileSync(filePath, "utf8");
+    const verificationLink = `${process.env.DOMAIN}/auth/two-step-verification`;
+    const supportLink = `${process.env.DOMAIN}/support`;
+
+    htmlTemplate = htmlTemplate
+      .replace("{{name}}", name)
+      .replace("{{verificationLink}}", verificationLink)
+      .replace("{{supportLink}}", supportLink)
+      .replace("{{otp}}", token);
+
+    const mailOptions = {
+      from: "no-reply@example.com",
+      to: email,
+      subject: "Two-Step Verification",
       html: htmlTemplate,
     };
 

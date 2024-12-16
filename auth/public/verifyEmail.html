@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Verify your email</title>
+    <title>Verify Your Email</title>
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -18,6 +18,7 @@
         background-color: #fff;
         border-radius: 10px;
         border: 1px solid #ccc;
+        text-align: center;
       }
       .btn {
         display: inline-block;
@@ -26,9 +27,16 @@
         color: white;
         text-decoration: none;
         border-radius: 5px;
+        font-size: 16px;
+        margin: 20px 0;
       }
       .btn:hover {
         background-color: #218838;
+      }
+      .footer {
+        margin-top: 20px;
+        font-size: 12px;
+        color: #666;
       }
     </style>
   </head>
@@ -36,11 +44,15 @@
     <div class="container">
       <h2>Welcome, {{name}}!</h2>
       <p>
-        Thank you for signing up. Please verify your email address to activate
-        your account.
+        Thank you for signing up. Please verify your email address to activate your account by clicking the button below:
       </p>
       <a href="{{verificationLink}}" class="btn">Verify Email</a>
-      <p>If you did not create this account, please ignore this email.</p>
+      <p>
+        If you didn’t create this account, you can ignore this email or
+        <a href="{{supportLink}}" style="color: #007bff">contact support</a>
+        for assistance.
+      </p>
+      <div class="footer">This link is valid for 1 hour.</div>
     </div>
   </body>
 </html>

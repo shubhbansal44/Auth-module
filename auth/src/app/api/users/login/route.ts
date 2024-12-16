@@ -1,9 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { compare } from "bcryptjs";
 import { LoginSchema } from "@/schemas/authSchema";
-import { getSafeUser, getUserByEmail } from "@/utils/users.utils";
-import { generateVerificationToken } from "@/lib/tokens.lib";
-import { sendVerificationEmail } from "@/utils/mailer.utils";
+import { getSafeUserById, getUserByEmail } from "@/utils/users.utils";
+import {
+  generateTwoFactorAuthConfirmation,
+  generateTwoFactorAuthToken,
+  generateVerificationToken,
+} from "@/lib/tokens.lib";
+import {
+  sendTwoStepVerificationMail,
+  sendVerificationEmail,
+} from "@/utils/mailer.utils";
+import { getTwoFactorAuthConfirmationByUserId } from "@/utils/twoFactorAuthConfirmation.utils";
 
 interface RequestBody {
   email: string;
@@ -28,9 +36,9 @@ export async function POST(request: NextRequest) {
 
     const { password, email } = validate.data;
 
-    const user = await getUserByEmail(email);
+    const existingUser = await getUserByEmail(email);
 
-    if (!user || !user.password) {
+    if (!existingUser || !existingUser.password) {
       return NextResponse.json(
         {
           message: "Login failed, user doesn't exists.",
@@ -41,10 +49,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!user.emailVerified) {
+    if (!existingUser.emailVerified) {
       const verificationToken = await generateVerificationToken({
-        email: user.email!,
-        name: user.name!,
+        email: existingUser.email!,
+        name: existingUser.name!,
       });
 
       if (!verificationToken) {
@@ -86,7 +94,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const isValid = await compare(password, user.password);
+    const isValid = await compare(password, existingUser.password);
 
     if (!isValid) {
       return NextResponse.json(
@@ -99,7 +107,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const returnUser = await getSafeUser(user.id);
+    const returnUser = await getSafeUserById(existingUser.id);
 
     if (!returnUser) {
       return NextResponse.json(
@@ -110,6 +118,56 @@ export async function POST(request: NextRequest) {
         },
         { status: 500 }
       );
+    }
+
+    if (existingUser.isTwoFactorAuthEnabled) {
+      const twoFactorAuthConfirmation =
+        await getTwoFactorAuthConfirmationByUserId(existingUser.id);
+
+      if (!twoFactorAuthConfirmation) {
+        const twoFactorAuthToken = await generateTwoFactorAuthToken({
+          email: existingUser.email!,
+          name: existingUser.name!,
+        });
+
+        if (!twoFactorAuthToken) {
+          return NextResponse.json(
+            {
+              message: "Internal server error.",
+              status: 500,
+              success: false,
+            },
+            { status: 500 }
+          );
+        }
+
+        const mailInfo = sendTwoStepVerificationMail({
+          name: twoFactorAuthToken.name,
+          email: twoFactorAuthToken.email,
+          token: twoFactorAuthToken.token,
+        });
+
+        if (!mailInfo) {
+          return NextResponse.json(
+            {
+              message: "Unable to send verification mail.",
+              status: 500,
+              success: false,
+            },
+            { status: 500 }
+          );
+        }
+
+        return NextResponse.json(
+          {
+            message: "Authentication mail sent!",
+            success: true,
+            status: 200,
+            user: returnUser,
+          },
+          { status: 200 }
+        );
+      }
     }
 
     return NextResponse.json(

@@ -14,10 +14,11 @@ export const publicRoutes: string[] = ["/", "/auth/verify"];
 
 export const authRoutes: string[] = [
   "/auth/login",
-  "/auth/signup",
+  "/auth/register",
   "/auth/error",
   "/auth/reset",
   "/auth/reset-password",
+  "/auth/two-step-verification",
 ];
 
 /**

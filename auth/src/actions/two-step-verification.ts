@@ -1,20 +1,21 @@
 "use server";
 
 import * as z from "zod";
-import { RegisterSchema } from "@/schemas/authSchema";
 import axios from "axios";
+import { TwoStepVerificationSchema } from "@/schemas/authSchema";
 
-export const Register = async (values: z.infer<typeof RegisterSchema>) => {
-  const validate = RegisterSchema.safeParse(values);
+export const Authenticate = async (token: z.infer<typeof TwoStepVerificationSchema>) => {
+  const validate = TwoStepVerificationSchema.safeParse(token);
 
   if (!validate.success) {
     return {
-      error: "Invalid credentials!",
+      error: "Invalid OTP!",
       success: "",
     };
   }
+
   try {
-    const response = await axios.post(`${process.env.SERVER}/register`, values);
+    const response = await axios.post(`${process.env.SERVER}/two-step-verification`, token);
     const res = response.data;
 
     return { success: res.message, error: "" };
