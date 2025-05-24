@@ -3,7 +3,6 @@ import { compare } from "bcryptjs";
 import { LoginSchema } from "@/schemas/authSchema";
 import { getSafeUserById, getUserByEmail } from "@/utils/users.utils";
 import {
-  generateTwoFactorAuthConfirmation,
   generateTwoFactorAuthToken,
   generateVerificationToken,
 } from "@/lib/tokens.lib";
